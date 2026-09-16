@@ -14,6 +14,8 @@ rete puo' vivere su piu' bande, ed e' il motivo per cui il nome non sta nel
 punto di accesso.
 """
 
+import time
+
 from api import ErroreAPI, ErroreRete
 from formati import (
     acceso_spento,
@@ -332,6 +334,14 @@ def vicini(ctx):
     except (ErroreAPI, ErroreRete) as guaio:
         errore(guaio)
         return
+    if chiedi_si_no("Vuoi che la box faccia una scansione nuova prima di elencarle?", False):
+        for punto in elenco:
+            try:
+                ctx.cliente.post(f"wifi/ap/{punto.get('id')}/neighbors/scan")
+            except (ErroreAPI, ErroreRete) as guaio:
+                errore(guaio)
+        dire("Scansione chiesta: durante la scansione il Wi-Fi puo' fare qualche scatto. Aspetto qualche secondo.")
+        time.sleep(6)
     for punto in elenco:
         try:
             reti_vicine = ctx.cliente.get(f"wifi/ap/{punto.get('id')}/neighbors/") or []

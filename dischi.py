@@ -229,10 +229,15 @@ def _azioni_file(ctx, percorso, voce, appunti):
         "sposta": "Segnalo da spostare",
         "cancella": "Cancella",
         "condividi": "Crea un collegamento per condividerlo",
+        "archivia": "Mettilo dentro un archivio zip",
+        "estrai": "Estrai qui il contenuto di questo archivio",
+        "impronta": "Calcola l'impronta del file, md5 o sha1",
         "niente": "Torna all'elenco",
     }
     if voce.get("type") == "dir":
         del voci_menu["scarica"]
+        del voci_menu["estrai"]
+        del voci_menu["impronta"]
     scelta = scegli(voci_menu, "cosa faccio")
     if not scelta or scelta == "niente":
         return
@@ -259,8 +264,52 @@ def _azioni_file(ctx, percorso, voce, appunti):
             _segui_compito(ctx, compito)
         elif scelta == "condividi":
             _crea_condivisione(ctx, intero_percorso)
+        elif scelta == "archivia":
+            nome = chiedi(f"Nome dell'archivio (Invio per {voce.get('name')}.zip): ", "s", default=f"{voce.get('name')}.zip").strip()
+            if nome:
+                compito = ctx.cliente.post("fs/archive/", dati={"files": [codifica(intero_percorso)], "dst": codifica(f"{percorso.rstrip('/')}/{nome}")})
+                _segui_compito(ctx, compito)
+        elif scelta == "estrai":
+            dire(f"Il contenuto finira' dentro {percorso}.")
+            if conferma("Invio estrae, Esc annulla"):
+                compito = ctx.cliente.post("fs/extract/", dati={"src": codifica(intero_percorso), "dst": codifica(percorso), "delete_archive": False, "overwrite": False})
+                _segui_compito(ctx, compito)
+            else:
+                dire("\nAnnullato.")
+        elif scelta == "impronta":
+            _impronta(ctx, intero_percorso)
     except (ErroreAPI, ErroreRete) as guaio:
         errore(guaio)
+
+
+def _impronta(ctx, percorso):
+    """Chiede al router l'impronta di un file e la aspetta.
+
+    Serve a sapere se il file sul disco della box e' identico a quello sul
+    computer, per esempio dopo una copia lunga: due impronte uguali vogliono
+    dire due file uguali.
+    """
+    tipo = scegli({"md5": "md5, piu' veloce", "sha1": "sha1, piu' robusta"}, "quale impronta")
+    if not tipo:
+        return
+    compito = ctx.cliente.post("fs/hash/", dati={"src": codifica(percorso), "hash_type": tipo})
+    numero_compito = compito.get("id") if isinstance(compito, dict) else None
+    if numero_compito is None:
+        dire("Il router non ha creato nessun compito.")
+        return
+    dire("Calcolo in corso, su un file grande ci vuole qualche minuto.")
+    while True:
+        stato = ctx.cliente.get(f"fs/tasks/{numero_compito}")
+        prompt_compatto(f"p{stato.get('progress', 0)}%")
+        if stato.get("state") in ("done", "failed"):
+            dire("")
+            break
+        if key(attesa=PASSO_ATTESA, alla_scadenza=None) == "\x1b":
+            dire("\nLascio perdere: il compito prosegue.")
+            return
+    risultato = ctx.cliente.prova(f"fs/tasks/{numero_compito}/hash") or ""
+    dire(f"Impronta {tipo}: {risultato}")
+    ctx.cliente.delete(f"fs/tasks/{numero_compito}")
 
 
 def _incolla(ctx, destinazione, appunti):

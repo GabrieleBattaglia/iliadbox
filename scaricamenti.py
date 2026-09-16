@@ -95,6 +95,8 @@ def scaricamenti(ctx):
         "ferma": "Ferma o riprendi uno scaricamento",
         "togli": "Togli uno scaricamento",
         "dettaglio": "Dettaglio di uno scaricamento",
+        "diario": "Leggi il diario di uno scaricamento",
+        "feed": "Feed RSS che la box sorveglia",
         "impostazioni": "Impostazioni del gestore",
         "niente": "Torna indietro",
     }
@@ -107,6 +109,9 @@ def scaricamenti(ctx):
             return
         if scelta == "impostazioni":
             _impostazioni(ctx)
+            return
+        if scelta == "feed":
+            _feed(ctx)
             return
         if not compiti:
             dire("Non c'e' nessuno scaricamento.")
@@ -132,6 +137,9 @@ def scaricamenti(ctx):
             dire("\nTolto.")
         elif scelta == "dettaglio":
             _dettaglio(ctx, compito)
+        elif scelta == "diario":
+            diario = ctx.cliente.prova(f"downloads/{quale}/log") or ""
+            dire(diario or "Il diario e' vuoto.")
     except (ErroreAPI, ErroreRete) as guaio:
         errore(guaio)
 
@@ -201,6 +209,44 @@ def _dettaglio(ctx, compito):
         for etichetta, indirizzo in (("File", "files"), ("Tracker", "trackers"), ("Peer", "peers")):
             elenco = ctx.cliente.prova(f"downloads/{compito.get('id')}/{indirizzo}") or []
             riga(etichetta, intero(len(elenco)))
+
+
+def _feed(ctx):
+    """I feed RSS che la box sorveglia per scaricare da sola le novita'."""
+    titolo("Feed RSS")
+    dire("La box guarda ogni tanto questi indirizzi e scarica da sola cio' che vi compare.")
+    try:
+        elenco = ctx.cliente.get("downloads/feeds/") or []
+    except (ErroreAPI, ErroreRete) as guaio:
+        errore(guaio)
+        return
+    dire(f"Feed sorvegliati: {len(elenco)}")
+    for feed in elenco:
+        dire(f"{incolonna(taglia(feed.get('title') or feed.get('url', ''), 40), 40)} {'automatico' if feed.get('auto_download') else 'a mano'} {feed.get('nb_unread', 0)} non letti")
+    voci = {"aggiungi": "Aggiungi un feed", "togli": "Togli un feed", "aggiorna": "Chiedi alla box di rileggerli", "niente": "Torna indietro"}
+    scelta = scegli(voci, "cosa faccio")
+    if not scelta or scelta == "niente":
+        return
+    try:
+        if scelta == "aggiungi":
+            indirizzo = chiedi("Indirizzo del feed: ", "s", smin=8, smax=1024).strip()
+            if indirizzo:
+                ctx.cliente.post("downloads/feeds/", dati={"url": indirizzo})
+                dire("Feed aggiunto.")
+        elif scelta == "togli":
+            if not elenco:
+                dire("Non c'e' nessun feed.")
+                return
+            voci_feed = {str(f.get("id")): f.get("title") or f.get("url") for f in elenco}
+            quale = scegli(voci_feed, "quale togliere")
+            if quale and conferma("Invio toglie il feed, Esc annulla"):
+                ctx.cliente.delete(f"downloads/feeds/{quale}")
+                dire("\nTolto.")
+        elif scelta == "aggiorna":
+            ctx.cliente.post("downloads/feeds/fetch")
+            dire("Chiesto alla box di rileggere i feed.")
+    except (ErroreAPI, ErroreRete) as guaio:
+        errore(guaio)
 
 
 def _impostazioni(ctx):

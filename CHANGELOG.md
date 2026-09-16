@@ -21,6 +21,11 @@ Prima release pubblica. Il prototipo "Iliad BryBox", che viveva dentro la cartel
 - Il Wi-Fi si governa per intero: accensione, nome e password delle reti, protezione, canale e larghezza dei punti di accesso, dispositivi collegati con il segnale, scansione dei vicini, occupazione dei canali con il consiglio su quale scegliere, filtro dei MAC, calendario e WPS.
 - Il telefono: registro delle chiamate filtrabile, segnato come letto, svuotato; cornette DECT che si fanno squillare per ritrovarle, si registrano, cambiano suoneria e volume; rubrica da elencare, cercare, aggiungere e togliere.
 - Il gestore degli scaricamenti aggiunge un indirizzo, mette in pausa, riprende, toglie e segue l'avanzamento. L'aggiunta passa da una funzione apposta del cliente, perche' e' l'unico punto delle API che non vuole il JSON ma i campi di una form.
+- L'elenco dei dispositivi distingue la rete di casa da quella degli ospiti, e chiede quale guardare solo quando tutte e due sono abitate.
+- Le porte ethernet si possono forzare a una velocita' e a un duplex, o rimettere in automatico, che e' cio' che serve quando un apparecchio vecchio non si mette d'accordo da solo con il router.
+- La scansione delle reti vicine si puo' chiedere nuova invece di leggere quella di prima.
+- Nel navigatore del disco: archivio zip di un file o di una cartella, estrazione di un archivio, e impronta md5 o sha1 di un file, per sapere se la copia sulla box e' identica all'originale.
+- Negli scaricamenti: i feed RSS che la box sorveglia, da elencare, aggiungere, togliere e far rileggere, e il diario di un singolo scaricamento.
 - Si puo' lanciare con il nome di un comando, e allora lo esegue e torna alla shell; `--host` dice dove sta la box, `--elenco` stampa i comandi, `--aiuto` ricorda l'uso.
 - Manuale in italiano, aperto dal comando `aiuto`, con la legenda delle righe compatte e una sezione per ogni area.
 - Prove con pytest che non toccano la box: formati, registro dei comandi e cliente delle API contro risposte finte.

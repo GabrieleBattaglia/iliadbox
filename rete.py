@@ -94,12 +94,27 @@ def _riga_ospite(ospite):
     return f"{segno} {nome} {indirizzo} {_come_collegato(ospite)}"
 
 
-def _ospiti(cliente, solo_attivi=True):
-    """L'elenco dei dispositivi, ordinato per nome."""
-    elenco = cliente.get("lan/browser/pub/") or []
+def _ospiti(cliente, solo_attivi=True, interfaccia="pub"):
+    """L'elenco dei dispositivi di una interfaccia, ordinato per nome.
+
+    La box tiene elenchi separati: pub e' la rete di casa, wifiguest e' la
+    rete degli ospiti, che esiste anche quando non la usa nessuno.
+    """
+    elenco = cliente.get(f"lan/browser/{interfaccia}/") or []
     if solo_attivi:
         elenco = [o for o in elenco if o.get("active")]
     return sorted(elenco, key=lambda o: (o.get("primary_name") or "").lower())
+
+
+def _quale_interfaccia(cliente):
+    """Su quale rete guardare: chiede solo quando ce n'e' piu' d'una abitata."""
+    interfacce = cliente.prova("lan/browser/interfaces/") or []
+    abitate = [i for i in interfacce if i.get("host_count")]
+    if len(abitate) < 2:
+        return abitate[0]["name"] if abitate else "pub"
+    nomi = {"pub": "la rete di casa", "wifiguest": "la rete degli ospiti"}
+    voci = {i["name"]: f"{nomi.get(i['name'], i['name'])}, {i.get('host_count')} dispositivi" for i in abitate}
+    return scegli(voci, "quale rete") or "pub"
 
 
 def righe_dispositivi(cliente, solo_attivi=True):
@@ -116,7 +131,7 @@ def dispositivi(ctx):
     dire("L'asterisco davanti al nome vuol dire che il dispositivo e' attivo adesso.")
     solo_attivi = not chiedi_si_no("Vuoi vedere anche quelli spenti?", False)
     try:
-        elenco = _ospiti(ctx.cliente, solo_attivi)
+        elenco = _ospiti(ctx.cliente, solo_attivi, _quale_interfaccia(ctx.cliente))
     except (ErroreAPI, ErroreRete) as guaio:
         errore(guaio)
         return
@@ -487,6 +502,37 @@ def porte_ethernet(ctx):
     buoni = dati.get("rx_good_packets") or 0
     if buoni:
         riga("Errori sul totale", percentuale(errori, buoni + errori, 3))
+    if chiedi_si_no("Vuoi cambiare velocita' e duplex di questa porta?", False):
+        _configura_porta(ctx, quale)
+
+
+def _configura_porta(ctx, quale):
+    """Forza velocita' e duplex di una porta, o li rimette in automatico.
+
+    Serve quando un apparecchio vecchio non si mette d'accordo da solo con il
+    router: il cavo risulta collegato ma la porta va a scatti.
+    """
+    try:
+        config = ctx.cliente.get(f"switch/port/{quale}/")
+    except (ErroreAPI, ErroreRete) as guaio:
+        errore(guaio)
+        return
+    dire(f"Adesso: velocita' {config.get('speed')}, duplex {config.get('duplex')}.")
+    velocita = scegli(
+        {"auto": "automatica, la scelgono fra loro", "10": "10 Mb/s", "100": "100 Mb/s", "1000": "1000 Mb/s", "2500": "2500 Mb/s"},
+        "quale velocita'",
+    )
+    if not velocita:
+        return
+    duplex = scegli({"auto": "automatico", "full": "full duplex", "half": "half duplex"}, "quale duplex") or "auto"
+    if not conferma("Invio conferma, Esc annulla"):
+        dire("\nAnnullato.")
+        return
+    try:
+        ctx.cliente.put(f"switch/port/{quale}/", dati={"speed": velocita, "duplex": duplex})
+        dire(f"\nPorta {quale}: velocita' {velocita}, duplex {duplex}.")
+    except (ErroreAPI, ErroreRete) as guaio:
+        errore(guaio)
 
 
 def righe_dhcpv6(cliente):
