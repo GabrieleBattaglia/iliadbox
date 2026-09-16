@@ -202,7 +202,7 @@ def aiuto(ctx):
 
     try:
         manuale(nf=percorso_risorsa("manuale.txt"), nome="Iliadbox")
-    except (OSError, ValueError) as guaio:
+    except (OSError, ValueError, EOFError) as guaio:
         errore(f"il manuale non si apre: {guaio}")
         dire("L'elenco dei comandi si ottiene comunque con il comando elenco.")
 
