@@ -81,6 +81,19 @@ python iliadbox.py diagnosi
 python iliadbox.py --elenco
 ```
 
+## Il pacchetto compilato
+
+Dalla cartella del progetto:
+
+```
+pyinstaller --noconfirm iliadbox.spec
+python zip_maker.py
+```
+
+Ne esce un file solo, `dist/iliadbox.exe`, che non ha bisogno né di Python né di GBUtils: si lancia com'è, e cerca `config.json` accanto a sé. Dentro ci sono il manuale e il changelog.
+
+Dal pacchetto restano fuori numpy e sounddevice, e con loro la possibilità di ascoltare le serie di numeri del comando `storico`: metterli dentro porta l'eseguibile da 46 a 125 MB e l'avvio da 1,4 a 5,5 secondi, perché un pacchetto in file unico si scompatta a ogni lancio. Chi vuole la sonificazione lancia il programma dai sorgenti, dove funziona; chi la vuole anche compilata sposta le due righe da `excludes` a `hiddenimports` dentro `iliadbox.spec`.
+
 ## Prove
 
 ```
