@@ -79,7 +79,9 @@ def condivisione_windows(ctx):
         return
     try:
         if scelta == "workgroup":
-            nuovo = chiedi(f"Gruppo di lavoro, adesso {config.get('workgroup')}: ", "s", smin=1, smax=32, default=config.get("workgroup")).strip()
+            nuovo = chiedi(
+                f"Gruppo di lavoro, adesso {config.get('workgroup')}: ", "s", smin=1, smax=32, default=config.get("workgroup")
+            ).strip()
             if nuovo and nuovo != config.get("workgroup"):
                 ctx.cliente.put("netshare/samba/", dati={"workgroup": nuovo})
                 dire(f"Gruppo di lavoro impostato a {nuovo}.")
@@ -197,7 +199,12 @@ def airmedia(ctx):
         capacita = ricevitore.get("capabilities") or {}
         cosa = ", ".join(nome for nome, puo in capacita.items() if puo) or "niente"
         dire(f"{incolonna(ricevitore.get('name', ''), 32)} riceve {cosa}{', con password' if ricevitore.get('password_protected') else ''}")
-    voci = {"manda": "Manda qualcosa a un apparecchio", "ferma": "Ferma la riproduzione", "acceso": "Accendi o spegni AirMedia", "niente": "Torna indietro"}
+    voci = {
+        "manda": "Manda qualcosa a un apparecchio",
+        "ferma": "Ferma la riproduzione",
+        "acceso": "Accendi o spegni AirMedia",
+        "niente": "Torna indietro",
+    }
     scelta = scegli(voci, "cosa faccio")
     if not scelta or scelta == "niente":
         return
@@ -259,7 +266,9 @@ def display(ctx):
         return
     try:
         if scelta == "brightness":
-            nuovo = chiedi(f"Luminosita' da 0 a 100, adesso {config.get('brightness')}: ", "i", imin=0, imax=100, default=config.get("brightness"))
+            nuovo = chiedi(
+                f"Luminosita' da 0 a 100, adesso {config.get('brightness')}: ", "i", imin=0, imax=100, default=config.get("brightness")
+            )
             ctx.cliente.put("lcd/config/", dati={"brightness": nuovo})
             dire(f"Luminosita' impostata a {nuovo}.")
         elif scelta == "orientation":
@@ -290,7 +299,9 @@ def risparmio_disco(ctx):
         return
     try:
         if chiedi_si_no("Tenere acceso lo spegnimento automatico?", bool(config.get("external_pm_enabled"))):
-            minuti = chiedi("Dopo quanti minuti di riposo si ferma: ", "i", imin=1, imax=240, default=config.get("external_pm_idle_before_spindown", 10))
+            minuti = chiedi(
+                "Dopo quanti minuti di riposo si ferma: ", "i", imin=1, imax=240, default=config.get("external_pm_idle_before_spindown", 10)
+            )
             ctx.cliente.put("storage/config/", dati={"external_pm_enabled": True, "external_pm_idle_before_spindown": minuti})
             dire(f"Il disco si fermera' dopo {minuti} minuti di riposo.")
         else:

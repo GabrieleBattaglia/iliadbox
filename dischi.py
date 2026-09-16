@@ -93,7 +93,9 @@ def righe_dischi(cliente):
             dettagli.append(f"fermo da {durata(disco.get('idle_duration'))}")
         righe.append("  " + ", ".join(dettagli))
         errori = (disco.get("read_error_requests") or 0) + (disco.get("write_error_requests") or 0)
-        righe.append(f"  letture {intero(disco.get('read_requests'))}, scritture {intero(disco.get('write_requests'))}, errori {intero(errori)}")
+        righe.append(
+            f"  letture {intero(disco.get('read_requests'))}, scritture {intero(disco.get('write_requests'))}, errori {intero(errori)}"
+        )
     parti = cliente.get("storage/partition/") or []
     for parte in parti:
         totale = parte.get("total_bytes") or 0
@@ -114,7 +116,9 @@ def dischi(ctx):
             dire(testo)
         config = ctx.cliente.prova("storage/config/") or {}
         if config:
-            dire(f"Spegnimento automatico del disco esterno: {si_no(config.get('external_pm_enabled'))}, dopo {config.get('external_pm_idle_before_spindown')} minuti di riposo")
+            dire(
+                f"Spegnimento automatico del disco esterno: {si_no(config.get('external_pm_enabled'))}, dopo {config.get('external_pm_idle_before_spindown')} minuti di riposo"
+            )
     except (ErroreAPI, ErroreRete) as guaio:
         errore(guaio)
 
@@ -252,7 +256,9 @@ def _azioni_file(ctx, percorso, voce, appunti):
         elif scelta in ("copia", "sposta"):
             appunti["file"] = [intero_percorso]
             appunti["modo"] = scelta
-            dire(f"Segnato per {'la copia' if scelta == 'copia' else 'lo spostamento'}: vai nella cartella di destinazione e scegli Azioni, poi Incolla.")
+            dire(
+                f"Segnato per {'la copia' if scelta == 'copia' else 'lo spostamento'}: vai nella cartella di destinazione e scegli Azioni, poi Incolla."
+            )
         elif scelta == "cancella":
             dire(f"Sto per cancellare {intero_percorso}.")
             if voce.get("type") == "dir":
@@ -267,12 +273,17 @@ def _azioni_file(ctx, percorso, voce, appunti):
         elif scelta == "archivia":
             nome = chiedi(f"Nome dell'archivio (Invio per {voce.get('name')}.zip): ", "s", default=f"{voce.get('name')}.zip").strip()
             if nome:
-                compito = ctx.cliente.post("fs/archive/", dati={"files": [codifica(intero_percorso)], "dst": codifica(f"{percorso.rstrip('/')}/{nome}")})
+                compito = ctx.cliente.post(
+                    "fs/archive/", dati={"files": [codifica(intero_percorso)], "dst": codifica(f"{percorso.rstrip('/')}/{nome}")}
+                )
                 _segui_compito(ctx, compito)
         elif scelta == "estrai":
             dire(f"Il contenuto finira' dentro {percorso}.")
             if conferma("Invio estrae, Esc annulla"):
-                compito = ctx.cliente.post("fs/extract/", dati={"src": codifica(intero_percorso), "dst": codifica(percorso), "delete_archive": False, "overwrite": False})
+                compito = ctx.cliente.post(
+                    "fs/extract/",
+                    dati={"src": codifica(intero_percorso), "dst": codifica(percorso), "delete_archive": False, "overwrite": False},
+                )
                 _segui_compito(ctx, compito)
             else:
                 dire("\nAnnullato.")
@@ -407,13 +418,25 @@ def compiti(ctx):
     except (ErroreAPI, ErroreRete) as guaio:
         errore(guaio)
         return
-    tipi = {"cp": "copia", "mv": "spostamento", "rm": "cancellazione", "archive": "archiviazione", "extract": "estrazione", "hash": "impronta", "repair": "riparazione"}
+    tipi = {
+        "cp": "copia",
+        "mv": "spostamento",
+        "rm": "cancellazione",
+        "archive": "archiviazione",
+        "extract": "estrazione",
+        "hash": "impronta",
+        "repair": "riparazione",
+    }
     dire(f"Compiti in elenco: {len(elenco)}")
     for compito in elenco:
         origine = compito.get("from") or ", ".join(compito.get("src") or [])
-        dire(f"{incolonna(tipi.get(compito.get('type'), compito.get('type', '')), 14)} {incolonna(compito.get('state', ''), 8)} {compito.get('progress', 0)}% {taglia(origine, 50)}")
+        dire(
+            f"{incolonna(tipi.get(compito.get('type'), compito.get('type', '')), 14)} {incolonna(compito.get('state', ''), 8)} {compito.get('progress', 0)}% {taglia(origine, 50)}"
+        )
         if compito.get("state") == "done":
-            dire(f"  {intero(compito.get('nfiles_done'))} elementi in {durata(compito.get('duration'))}, finito {data_ora(compito.get('done_ts'))}")
+            dire(
+                f"  {intero(compito.get('nfiles_done'))} elementi in {durata(compito.get('duration'))}, finito {data_ora(compito.get('done_ts'))}"
+            )
     attivi = [c for c in elenco if c.get("state") in ("running", "queued", "paused")]
     voci = {}
     if attivi:

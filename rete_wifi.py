@@ -98,7 +98,9 @@ def stato_wifi(ctx):
         if scelta in ("accendi", "spegni"):
             nuovo = scelta == "accendi"
             if not nuovo:
-                dire("Attenzione: se questo computer e' collegato in Wi-Fi, spegnendolo perdi la connessione e non potrai riaccenderlo da qui.")
+                dire(
+                    "Attenzione: se questo computer e' collegato in Wi-Fi, spegnendolo perdi la connessione e non potrai riaccenderlo da qui."
+                )
             if not conferma(f"Invio {'accende' if nuovo else 'spegne'}, Esc annulla"):
                 dire("\nAnnullato.")
                 return
@@ -124,7 +126,9 @@ def reti(ctx):
         config = rete.get("config", {})
         stato = rete.get("status", {})
         dire(f"{incolonna(config.get('ssid', ''), 24)} {incolonna(banda(stato.get('band')), 8)} {cifratura(config.get('encryption'))}")
-        dire(f"  identificativo {rete.get('id')}, {acceso_spento(config.get('enabled'))}, {stato.get('sta_count', 0)} collegati, {'nascosta' if config.get('hide_ssid') else 'visibile'}")
+        dire(
+            f"  identificativo {rete.get('id')}, {acceso_spento(config.get('enabled'))}, {stato.get('sta_count', 0)} collegati, {'nascosta' if config.get('hide_ssid') else 'visibile'}"
+        )
     if not elenco or not chiedi_si_no("Vuoi cambiare qualcosa in una rete?", False):
         return
     voci = {r.get("id"): f"{r.get('config', {}).get('ssid')} su {banda(r.get('status', {}).get('band'))}" for r in elenco}
@@ -244,7 +248,9 @@ def _modifica_punto(ctx, punto):
         if scelta == "canale":
             _suggerisci_canale(ctx, punto)
             massimo = 13 if banda_punto == "2d4g" else 196
-            nuovo = chiedi(f"Canale da 0 a {massimo}, zero per automatico: ", "i", imin=0, imax=massimo, default=config.get("primary_channel", 0))
+            nuovo = chiedi(
+                f"Canale da 0 a {massimo}, zero per automatico: ", "i", imin=0, imax=massimo, default=config.get("primary_channel", 0)
+            )
             ctx.cliente.put(f"wifi/ap/{punto.get('id')}", dati={"config": {"primary_channel": nuovo}})
             dire(f"Canale impostato a {nuovo or 'automatico'}.")
         elif scelta == "larghezza":
@@ -322,7 +328,10 @@ def collegati(ctx):
     for verso, chiave in (("in ricezione", "last_rx"), ("in trasmissione", "last_tx")):
         dettaglio = stazione.get(chiave) or {}
         if dettaglio:
-            riga(f"Ultima velocita' radio {verso}", f"{dettaglio.get('bitrate', 0) / 1000:.0f} Mb/s, larghezza {dettaglio.get('width')} MHz, {(dettaglio.get('mcs') and 'MCS ' + str(dettaglio.get('mcs'))) or ''}")
+            riga(
+                f"Ultima velocita' radio {verso}",
+                f"{dettaglio.get('bitrate', 0) / 1000:.0f} Mb/s, larghezza {dettaglio.get('width')} MHz, {(dettaglio.get('mcs') and 'MCS ' + str(dettaglio.get('mcs'))) or ''}",
+            )
 
 
 def vicini(ctx):
@@ -352,10 +361,15 @@ def vicini(ctx):
         canali = {}
         for vicina in sorted(reti_vicine, key=lambda v: v.get("signal", -100), reverse=True):
             canali[vicina.get("channel")] = canali.get(vicina.get("channel"), 0) + 1
-            dire(f"  {incolonna(vicina.get('ssid') or 'senza nome', 26)} canale {incolonna(str(vicina.get('channel')), 4)} {segnale(vicina.get('signal'))}")
+            dire(
+                f"  {incolonna(vicina.get('ssid') or 'senza nome', 26)} canale {incolonna(str(vicina.get('channel')), 4)} {segnale(vicina.get('signal'))}"
+            )
         if canali:
             affollati = sorted(canali.items(), key=lambda coppia: coppia[1], reverse=True)
-            dire("  Canali piu' affollati: " + ", ".join(f"{canale} con {quante} ret{'e' if quante == 1 else 'i'}" for canale, quante in affollati[:3]))
+            dire(
+                "  Canali piu' affollati: "
+                + ", ".join(f"{canale} con {quante} ret{'e' if quante == 1 else 'i'}" for canale, quante in affollati[:3])
+            )
 
 
 def canali(ctx):
@@ -376,7 +390,9 @@ def canali(ctx):
         dire(f"Banda {banda(punto.get('config', {}).get('band'))}, adesso sul canale {stato.get('primary_channel')}")
         for canale in sorted(occupazione, key=lambda c: c.get("channel", 0)):
             segno = " <-- in uso" if canale.get("channel") == stato.get("primary_channel") else ""
-            dire(f"  canale {incolonna(str(canale.get('channel')), 4)} occupato al {incolonna(str(canale.get('rx_busy_percent')) + '%', 5)} rumore {canale.get('noise_level')} dBm{segno}")
+            dire(
+                f"  canale {incolonna(str(canale.get('channel')), 4)} occupato al {incolonna(str(canale.get('rx_busy_percent')) + '%', 5)} rumore {canale.get('noise_level')} dBm{segno}"
+            )
         _suggerisci_canale(ctx, punto)
 
 
@@ -399,7 +415,12 @@ def filtro_mac(ctx):
     dire(f"Indirizzi in elenco: {len(elenco)}")
     for voce in elenco:
         dire(f"  {incolonna(voce.get('mac', ''), 18)} {voce.get('type', '')} {voce.get('comment', '')}")
-    voci = {"modo": "Cambia il modo del filtro", "aggiungi": "Aggiungi un indirizzo", "togli": "Togli un indirizzo", "niente": "Torna indietro"}
+    voci = {
+        "modo": "Cambia il modo del filtro",
+        "aggiungi": "Aggiungi un indirizzo",
+        "togli": "Togli un indirizzo",
+        "niente": "Torna indietro",
+    }
     scelta = scegli(voci, "cosa faccio")
     if not scelta or scelta == "niente":
         return
@@ -452,7 +473,7 @@ def orari_wifi(ctx):
         dire(f"La settimana e' divisa in {len(mappa)} caselle, {risoluzione} al giorno, cioe' una ogni {24 * 60 // risoluzione} minuti.")
         giorni = ["lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato", "domenica"]
         for indice, giorno in enumerate(giorni):
-            fette = mappa[indice * risoluzione:(indice + 1) * risoluzione]
+            fette = mappa[indice * risoluzione : (indice + 1) * risoluzione]
             if not fette:
                 continue
             accese = sum(1 for f in fette if f == "on")
@@ -499,7 +520,9 @@ def wps(ctx):
         errore(guaio)
         return
     dire(f"WPS: {attivo_disattivo(config.get('enabled'))}")
-    dire("Il WPS collega un dispositivo premendo un tasto, ma e' anche un modo in piu' per entrare nella rete: chi non lo usa fa bene a tenerlo spento.")
+    dire(
+        "Il WPS collega un dispositivo premendo un tasto, ma e' anche un modo in piu' per entrare nella rete: chi non lo usa fa bene a tenerlo spento."
+    )
     if not chiedi_si_no("Vuoi cambiare?", False):
         return
     try:

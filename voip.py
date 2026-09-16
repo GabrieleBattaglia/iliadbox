@@ -57,7 +57,9 @@ def righe_chiamate(cliente, quante=20):
 def chiamate(ctx):
     """Il registro delle chiamate, con i filtri e la pulizia."""
     titolo("Registro delle chiamate")
-    dire("L'asterisco davanti a una riga vuol dire che la chiamata non e' ancora stata vista. La freccia dice il verso: freccia verso sinistra ricevuta, con la x persa, verso destra fatta da casa.")
+    dire(
+        "L'asterisco davanti a una riga vuol dire che la chiamata non e' ancora stata vista. La freccia dice il verso: freccia verso sinistra ricevuta, con la x persa, verso destra fatta da casa."
+    )
     try:
         elenco = ctx.cliente.get("call/log/") or []
     except (ErroreAPI, ErroreRete) as guaio:
@@ -196,7 +198,13 @@ def telefono(ctx):
             ctx.cliente.put("phone/config/", dati={"dect_registration": nuovo})
             dire(f"Registrazione {attivo_disattivo(nuovo)}.")
         elif scelta == "suoneria":
-            numero = chiedi(f"Numero della suoneria da 1 a 8, adesso {config.get('dect_ring_pattern')}: ", "i", imin=1, imax=8, default=config.get("dect_ring_pattern", 1))
+            numero = chiedi(
+                f"Numero della suoneria da 1 a 8, adesso {config.get('dect_ring_pattern')}: ",
+                "i",
+                imin=1,
+                imax=8,
+                default=config.get("dect_ring_pattern", 1),
+            )
             ctx.cliente.put("phone/config/", dati={"dect_ring_pattern": numero})
             dire(f"Suoneria numero {numero}.")
         elif scelta == "eco":
@@ -288,7 +296,9 @@ def rubrica(ctx):
             if not nome or not numero:
                 dire("Manca qualcosa, non faccio niente.")
                 return
-            tipo = scegli({"home": "casa", "mobile": "cellulare", "work": "lavoro", "fax": "fax", "other": "altro"}, "che numero e'") or "home"
+            tipo = (
+                scegli({"home": "casa", "mobile": "cellulare", "work": "lavoro", "fax": "fax", "other": "altro"}, "che numero e'") or "home"
+            )
             creato = ctx.cliente.post("contact/", dati={"display_name": nome, "last_name": nome})
             ctx.cliente.post("number/", dati={"contact_id": creato.get("id"), "number": numero, "type": tipo, "is_default": True})
             dire(f"{nome} aggiunto alla rubrica con il numero {numero}.")

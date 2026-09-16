@@ -222,8 +222,15 @@ def _feed(ctx):
         return
     dire(f"Feed sorvegliati: {len(elenco)}")
     for feed in elenco:
-        dire(f"{incolonna(taglia(feed.get('title') or feed.get('url', ''), 40), 40)} {'automatico' if feed.get('auto_download') else 'a mano'} {feed.get('nb_unread', 0)} non letti")
-    voci = {"aggiungi": "Aggiungi un feed", "togli": "Togli un feed", "aggiorna": "Chiedi alla box di rileggerli", "niente": "Torna indietro"}
+        dire(
+            f"{incolonna(taglia(feed.get('title') or feed.get('url', ''), 40), 40)} {'automatico' if feed.get('auto_download') else 'a mano'} {feed.get('nb_unread', 0)} non letti"
+        )
+    voci = {
+        "aggiungi": "Aggiungi un feed",
+        "togli": "Togli un feed",
+        "aggiorna": "Chiedi alla box di rileggerli",
+        "niente": "Torna indietro",
+    }
     scelta = scegli(voci, "cosa faccio")
     if not scelta or scelta == "niente":
         return

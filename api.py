@@ -118,9 +118,7 @@ class Client:
         indirizzo = self.indirizzo(endpoint)
         self.chiamate += 1
         try:
-            risposta = self.sessione.request(
-                metodo.upper(), indirizzo, json=dati, params=parametri, timeout=self.tempo_massimo
-            )
+            risposta = self.sessione.request(metodo.upper(), indirizzo, json=dati, params=parametri, timeout=self.tempo_massimo)
         except requests.exceptions.RequestException as errore:
             self.ultimo_errore = str(errore)
             raise ErroreRete(f"{metodo.upper()} {endpoint}: {errore}") from errore

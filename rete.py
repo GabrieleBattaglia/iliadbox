@@ -41,9 +41,22 @@ from formati import (
 
 # Le categorie che il router accetta quando si dice che tipo di apparecchio e'.
 TIPI_APPARECCHIO = [
-    "workstation", "laptop", "smartphone", "tablet", "printer", "vg_console",
-    "television", "nas", "ip_camera", "ip_phone", "freebox_player",
-    "freebox_server", "networking_device", "multimedia_device", "car", "other",
+    "workstation",
+    "laptop",
+    "smartphone",
+    "tablet",
+    "printer",
+    "vg_console",
+    "television",
+    "nas",
+    "ip_camera",
+    "ip_phone",
+    "freebox_player",
+    "freebox_server",
+    "networking_device",
+    "multimedia_device",
+    "car",
+    "other",
 ]
 
 
@@ -181,7 +194,9 @@ def _mostra_dettaglio(ctx, ospite):
         riga("Inviati al dispositivo", dimensione(punto.get("tx_bytes")))
     for collegamento in ospite.get("l3connectivities") or []:
         stato = "attivo" if collegamento.get("active") else "non attivo"
-        dire(f"{collegamento.get('af')}: {collegamento.get('addr')}, {stato}, ultima attivita' {da_quando(collegamento.get('last_activity'))}")
+        dire(
+            f"{collegamento.get('af')}: {collegamento.get('addr')}, {stato}, ultima attivita' {da_quando(collegamento.get('last_activity'))}"
+        )
     riga("Visto la prima volta", data_ora(ospite.get("first_activity")))
     riga("Ultima attivita'", da_quando(ospite.get("last_activity")))
     riga("Tenuto in elenco anche da spento", si_no(ospite.get("persistent")))
@@ -306,7 +321,9 @@ def rete_locale(ctx):
         dire("Nessun cambiamento.")
         return
     if scelta == "ip":
-        dire("Attenzione: cambiando l'indirizzo del router, tutti i dispositivi dovranno ricollegarsi e questo programma andra' riconfigurato.")
+        dire(
+            "Attenzione: cambiando l'indirizzo del router, tutti i dispositivi dovranno ricollegarsi e questo programma andra' riconfigurato."
+        )
     if not conferma("Invio conferma, Esc annulla"):
         dire("\nAnnullato.")
         return
@@ -417,7 +434,9 @@ def statici(ctx):
         return
     dire(f"Indirizzi fissi impostati: {len(elenco)}")
     for voce in elenco:
-        dire(f"{incolonna(voce.get('hostname') or voce.get('comment') or 'senza nome', 22)} {incolonna(voce.get('ip', ''), 15)} {voce.get('mac')}")
+        dire(
+            f"{incolonna(voce.get('hostname') or voce.get('comment') or 'senza nome', 22)} {incolonna(voce.get('ip', ''), 15)} {voce.get('mac')}"
+        )
     voci = {"aggiungi": "Aggiungi un indirizzo fisso", "togli": "Togli un indirizzo fisso", "niente": "Torna indietro"}
     scelta = scegli(voci, "cosa faccio")
     if not scelta or scelta == "niente":
@@ -429,7 +448,10 @@ def statici(ctx):
             if not elenco:
                 dire("Non ce n'e' nessuno da togliere.")
                 return
-            voci_togli = {v.get("id", str(i)): f"{v.get('hostname') or v.get('comment') or 'senza nome'} {v.get('ip')} {v.get('mac')}" for i, v in enumerate(elenco)}
+            voci_togli = {
+                v.get("id", str(i)): f"{v.get('hostname') or v.get('comment') or 'senza nome'} {v.get('ip')} {v.get('mac')}"
+                for i, v in enumerate(elenco)
+            }
             quale = scegli(voci_togli, "quale togliere")
             if not quale:
                 return
@@ -455,7 +477,9 @@ def _aggiungi_statico(ctx):
     else:
         mac = chiedi("Indirizzo MAC: ", "s", smin=11, smax=17).strip()
         proposto = ""
-    indirizzo = chiedi(f"Indirizzo da assegnare{f' (Invio per {proposto})' if proposto else ''}: ", "s", smin=7, smax=15, default=proposto).strip()
+    indirizzo = chiedi(
+        f"Indirizzo da assegnare{f' (Invio per {proposto})' if proposto else ''}: ", "s", smin=7, smax=15, default=proposto
+    ).strip()
     if not mac or not indirizzo:
         dire("Manca qualcosa, non faccio niente.")
         return

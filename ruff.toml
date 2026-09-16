@@ -1,6 +1,6 @@
 # Configurazione ruff di Iliadbox.
 # Autori: Gabriele Battaglia (IZ4APU) & ClaudIA (Claude Opus 5, modalità auto).
-line-length = 200
+line-length = 140
 
 [lint]
 select = ["E", "F", "W", "B", "SIM", "UP", "I", "C4", "RET", "BLE", "S", "RUF", "DTZ", "FURB"]

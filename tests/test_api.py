@@ -64,7 +64,9 @@ def test_risposta_riuscita_restituisce_solo_il_risultato():
 
 
 def test_errore_diventa_eccezione_con_il_codice():
-    cliente = cliente_con([RispostaFinta({"success": False, "error_code": "insufficient_rights", "msg": "manca il permesso", "missing_right": "settings"})])
+    cliente = cliente_con(
+        [RispostaFinta({"success": False, "error_code": "insufficient_rights", "msg": "manca il permesso", "missing_right": "settings"})]
+    )
     with pytest.raises(ErroreAPI) as guaio:
         cliente.get("wifi/config/")
     assert guaio.value.codice == "insufficient_rights"

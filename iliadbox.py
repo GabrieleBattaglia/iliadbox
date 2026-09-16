@@ -74,7 +74,9 @@ def prepara(host=None, silenzioso=False):
         config.scrivi("host", indirizzo)
     if not config.associata:
         dire("Questo computer non e' ancora autorizzato dalla box.")
-        dire("L'autorizzazione si da' una volta sola: la box mostra una richiesta sul suo display e aspetta che tu prema la freccia destra.")
+        dire(
+            "L'autorizzazione si da' una volta sola: la box mostra una richiesta sul suo display e aspetta che tu prema la freccia destra."
+        )
         try:
             if not accesso.associa():
                 return None
@@ -104,10 +106,14 @@ def benvenuto(ctx):
     attivi = sum(1 for ospite in ospiti if ospite.get("active"))
     sensori = sistema.get("sensors") or []
     calore = f", {sensori[-1].get('value')} gradi" if sensori else ""
-    stato_internet = {"up": "internet attiva", "down": "internet caduta"}.get(connessione.get("state"), connessione.get("state", "stato sconosciuto"))
+    stato_internet = {"up": "internet attiva", "down": "internet caduta"}.get(
+        connessione.get("state"), connessione.get("state", "stato sconosciuto")
+    )
     titolo(f"{sistema.get('model_info', {}).get('pretty_name', 'Iliadbox')}, firmware {sistema.get('firmware_version', '')}{calore}")
     dire(f"{stato_internet}, {attivi} dispositivi attivi in rete.")
-    dire("Digita una parola per filtrare i comandi, Invio per scegliere, Escape per uscire. Scrivi elenco per vederli tutti, aiuto per il manuale.")
+    dire(
+        "Digita una parola per filtrare i comandi, Invio per scegliere, Escape per uscire. Scrivi elenco per vederli tutti, aiuto per il manuale."
+    )
 
 
 def ciclo(ctx):

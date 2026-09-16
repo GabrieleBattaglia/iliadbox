@@ -122,7 +122,9 @@ def _aggiungi_porta(ctx):
     if not protocollo:
         return
     porta_esterna = chiedi("Porta vista da internet: ", "i", imin=1, imax=65535)
-    porta_fine = chiedi(f"Ultima porta dell'intervallo (Invio per {porta_esterna}): ", "i", imin=porta_esterna, imax=65535, default=porta_esterna)
+    porta_fine = chiedi(
+        f"Ultima porta dell'intervallo (Invio per {porta_esterna}): ", "i", imin=porta_esterna, imax=65535, default=porta_esterna
+    )
     destinazione = chiedi("Indirizzo del dispositivo di casa: ", "s", smin=7, smax=15).strip()
     porta_interna = chiedi(f"Porta sul dispositivo (Invio per {porta_esterna}): ", "i", imin=1, imax=65535, default=porta_esterna)
     sorgente = chiedi("Aprire solo a un indirizzo di internet (Invio per chiunque): ", "s", default="").strip()
@@ -148,7 +150,9 @@ def _aggiungi_porta(ctx):
 def dmz(ctx):
     """La DMZ: tutto cio' che arriva da internet verso un solo dispositivo."""
     titolo("DMZ")
-    dire("Con la DMZ accesa, tutto il traffico che arriva da internet e non ha gia' una regola finisce a un unico dispositivo, che resta cosi' esposto.")
+    dire(
+        "Con la DMZ accesa, tutto il traffico che arriva da internet e non ha gia' una regola finisce a un unico dispositivo, che resta cosi' esposto."
+    )
     try:
         config = ctx.cliente.get("fw/dmz/")
     except (ErroreAPI, ErroreRete) as guaio:
@@ -191,7 +195,9 @@ def porte_dei_servizi(ctx):
     for servizio in sorted(elenco, key=lambda s: str(s.get("id"))):
         stato = "attivo" if servizio.get("active") else "fermo"
         modificabile = "" if servizio.get("readonly") else f", si puo' spostare fra {servizio.get('min_port')} e {servizio.get('max_port')}"
-        dire(f"{incolonna(str(servizio.get('id')), 14)} porta {incolonna(str(servizio.get('in_port')), 6)} {incolonna(servizio.get('type', ''), 8)} {stato}{modificabile}")
+        dire(
+            f"{incolonna(str(servizio.get('id')), 14)} porta {incolonna(str(servizio.get('in_port')), 6)} {incolonna(servizio.get('type', ''), 8)} {stato}{modificabile}"
+        )
     modificabili = [s for s in elenco if not s.get("readonly")]
     if not modificabili or not chiedi_si_no("Vuoi spostare un servizio su un'altra porta?", False):
         return
@@ -254,7 +260,10 @@ def vpn(ctx):
         return
     try:
         if scelta in ("dettaglio", "accendi"):
-            voci_server = {s.get("name"): f"{NOMI_VPN.get(s.get('name'), s.get('name'))}, {STATI_VPN.get(s.get('state'), s.get('state'))}" for s in servitori}
+            voci_server = {
+                s.get("name"): f"{NOMI_VPN.get(s.get('name'), s.get('name'))}, {STATI_VPN.get(s.get('state'), s.get('state'))}"
+                for s in servitori
+            }
             quale = scegli(voci_server, "quale server")
             if not quale:
                 return
@@ -303,7 +312,9 @@ def _utenti_vpn(ctx):
     utenti = ctx.cliente.prova("vpn/user/") or []
     dire(f"Utenti VPN: {len(utenti)}")
     for utente in utenti:
-        dire(f"{incolonna(utente.get('login', ''), 20)} {'attivo' if not utente.get('disabled') else 'disattivato'} {utente.get('ip_reservation', '')}")
+        dire(
+            f"{incolonna(utente.get('login', ''), 20)} {'attivo' if not utente.get('disabled') else 'disattivato'} {utente.get('ip_reservation', '')}"
+        )
     voci = {"aggiungi": "Aggiungi un utente", "togli": "Togli un utente", "niente": "Torna indietro"}
     scelta = scegli(voci, "cosa faccio")
     if not scelta or scelta == "niente":
@@ -348,7 +359,9 @@ def vpn_cliente(ctx):
     configurazioni = ctx.cliente.prova("vpn_client/config/") or []
     dire(f"Profili configurati: {len(configurazioni)}")
     for profilo in configurazioni:
-        dire(f"{incolonna(profilo.get('description') or profilo.get('id', ''), 24)} {profilo.get('type', '')} {attivo_disattivo(profilo.get('active'))}")
+        dire(
+            f"{incolonna(profilo.get('description') or profilo.get('id', ''), 24)} {profilo.get('type', '')} {attivo_disattivo(profilo.get('active'))}"
+        )
     if not configurazioni:
         dire("Nessun profilo: si creano dall'interfaccia web della box, perche' servono i file del fornitore della VPN.")
 
@@ -403,6 +416,8 @@ def notifiche(ctx):
     dire(f"Destinatari registrati: {len(bersagli)}")
     for bersaglio in bersagli:
         iscrizioni = ", ".join(bersaglio.get("subscriptions") or []) or "nessuna"
-        dire(f"{incolonna(bersaglio.get('name', ''), 22)} {incolonna(bersaglio.get('type', ''), 10)} ultimo uso {da_quando(bersaglio.get('last_use'))}")
+        dire(
+            f"{incolonna(bersaglio.get('name', ''), 22)} {incolonna(bersaglio.get('type', ''), 10)} ultimo uso {da_quando(bersaglio.get('last_use'))}"
+        )
         dire(f"  avvisi: {iscrizioni}")
     dire("I destinatari si aggiungono dall'applicazione ufficiale sul telefono: qui si controlla che non ce ne siano di sconosciuti.")

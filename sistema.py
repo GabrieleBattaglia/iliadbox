@@ -281,7 +281,9 @@ def _sorveglia_temperatura(ctx, intervallo=3):
 def traffico(ctx):
     """Il traffico su internet in tempo reale, riga per riga."""
     titolo("Traffico in tempo reale")
-    dire("Ogni riga sta in quaranta caratteri: d e' la discesa e u la salita, in byte al secondo con K per mille e M per un milione; t e' la temperatura della CPU e q da quanto la box e' accesa.")
+    dire(
+        "Ogni riga sta in quaranta caratteri: d e' la discesa e u la salita, in byte al secondo con K per mille e M per un milione; t e' la temperatura della CPU e q da quanto la box e' accesa."
+    )
     dire("Premi un tasto per smettere.")
     while True:
         try:
@@ -363,9 +365,13 @@ def storico(ctx):
             continue
         serie_disponibili[campo] = riassunto
         if base in ("net", "switch"):
-            dire(f"{campo}: media {velocita_byte(riassunto['media'])}, massimo {velocita_byte(riassunto['massimo'])}, minimo {velocita_byte(riassunto['minimo'])}")
+            dire(
+                f"{campo}: media {velocita_byte(riassunto['media'])}, massimo {velocita_byte(riassunto['massimo'])}, minimo {velocita_byte(riassunto['minimo'])}"
+            )
         else:
-            dire(f"{campo}: media {numero(riassunto['media'])}, massimo {numero(riassunto['massimo'])}, minimo {numero(riassunto['minimo'])}")
+            dire(
+                f"{campo}: media {numero(riassunto['media'])}, massimo {numero(riassunto['massimo'])}, minimo {numero(riassunto['minimo'])}"
+            )
     if not serie_disponibili:
         return
     if chiedi_si_no("Vuoi ascoltare una di queste serie come suono?", False):
@@ -501,7 +507,9 @@ def righe_diagnosi(cliente):
         avvisi += _controllo(righe, "guasto", f"connessione a internet {connessione_ora.get('state')}")
     else:
         righe.append(f"ok internet attiva su {connessione_ora.get('media')} con indirizzo {connessione_ora.get('ipv4')}")
-        righe.append(f"ok portata {velocita_bit(connessione_ora.get('bandwidth_down'))} in discesa e {velocita_bit(connessione_ora.get('bandwidth_up'))} in salita")
+        righe.append(
+            f"ok portata {velocita_bit(connessione_ora.get('bandwidth_down'))} in discesa e {velocita_bit(connessione_ora.get('bandwidth_up'))} in salita"
+        )
     eventi = cliente.prova("connection/logs/") or []
     cadute = [e for e in eventi if e.get("state") == "down"]
     if cadute:
@@ -548,7 +556,9 @@ def righe_diagnosi(cliente):
     if config.get("api_remote_access"):
         righe.append("ok le API sono raggiungibili da fuori casa")
     if config.get("allow_token_request"):
-        avvisi += _controllo(righe, "avviso", "la box accetta nuove richieste di associazione: chi ha accesso fisico puo' autorizzare una applicazione")
+        avvisi += _controllo(
+            righe, "avviso", "la box accetta nuove richieste di associazione: chi ha accesso fisico puo' autorizzare una applicazione"
+        )
     ftp = cliente.prova("ftp/config/") or {}
     if ftp.get("enabled") and ftp.get("allow_anonymous"):
         avvisi += _controllo(righe, "avviso", "il server FTP accetta collegamenti anonimi")

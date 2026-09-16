@@ -17,7 +17,10 @@ SISTEMA = {
     "mac": "00:11:22:33:44:55",
     "uptime_val": 90061,
     "model_info": {"pretty_name": "iliadbox (r1)", "net_operator": "iliad_ita", "default_language": "ita"},
-    "sensors": [{"id": "temp_t1", "name": "Temperatura 1", "value": 54}, {"id": "temp_cpub", "name": "Temperatura della CPU B", "value": 57}],
+    "sensors": [
+        {"id": "temp_t1", "name": "Temperatura 1", "value": 54},
+        {"id": "temp_cpub", "name": "Temperatura della CPU B", "value": 57},
+    ],
     "fans": [{"id": "fan0_speed", "name": "Ventola 1", "value": 1530}],
     "disk_status": "active",
     "user_storage_powered": True,
