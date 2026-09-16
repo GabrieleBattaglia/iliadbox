@@ -1,0 +1,231 @@
+MANUALE DI ILIADBOX
+Il router Iliadbox dalla tastiera, per chi legge con lo screen reader.
+Autori: Gabriele Battaglia (IZ4APU) & ClaudIA (Claude Opus 5, modalità auto).
+Versione 1.0.0 del 16 settembre 2026.
+
+1. CHE COS'E'
+Iliadbox è un programma da console che comanda il router Iliadbox attraverso
+le sue API, cioè la stessa strada che usa l'applicazione ufficiale. Fa quello
+che fa l'interfaccia web della box, ma senza riquadri, cursori e finestrelle:
+ogni informazione è una riga di testo e ogni scelta è un menu che si filtra
+digitando. È nato perché l'interfaccia web della Iliadbox, con uno screen
+reader, è faticosa fino all'inutilizzabile.
+
+Il programma parla soltanto con il router di casa, sulla rete locale. Non
+manda niente a nessun altro, non tiene statistiche e non chiede account.
+
+2. CHE COSA SERVE
+Python 3.10 o più recente, la libreria requests, e GBUtils, la libreria
+condivisa del parco software di Gabriele Battaglia, la cui cartella deve
+stare nella PYTHONPATH. Il computer deve essere collegato alla rete della
+box, via cavo o in Wi-Fi.
+
+Per il solo comando storico, e solo quando si sceglie di ascoltare una serie
+di numeri invece di leggerla, servono anche numpy e sounddevice. Senza di
+loro tutto il resto funziona lo stesso.
+
+3. LA PRIMA VOLTA
+Al primo avvio il programma non è ancora autorizzato dalla box e chiede il
+permesso. Sul display della Iliadbox compare una richiesta, e bisogna premere
+la freccia destra sul fianco della box per accettare, entro due minuti.
+Questo si fa una volta sola: da quel momento il programma riceve un token, lo
+salva in config.json accanto a sé stesso e lo riusa a ogni avvio.
+
+Il token vale quanto una password: chi ce l'ha comanda il router. Per questo
+config.json non fa parte del repository e non va mandato a nessuno. Il
+programma non lo stampa mai, nemmeno nei rapporti.
+
+Se la box viene reimpostata, o se si vuole ricominciare da capo, basta
+cancellare config.json e rilanciare il programma.
+
+4. IL MENU
+Il prompt principale è "iliadbox>". Digitando qualche lettera l'elenco si
+filtra: scrivendo wifi restano i comandi del Wi-Fi, scrivendo porta restano
+quelli delle porte. Invio sceglie, Escape esce. Il menu è quello di GBUtils,
+lo stesso di tutti i programmi del parco software.
+
+Tre comandi aiutano a orientarsi:
+elenco stampa tutti i comandi raggruppati per area;
+aree fa scegliere prima l'area e poi il comando;
+cerca trova un comando per parola, anche dentro la descrizione.
+
+Dentro un comando, i menu funzionano allo stesso modo, e Escape torna sempre
+indietro senza fare niente. Ogni modifica viene chiesta due volte: prima si
+dice che cosa cambierà, poi si aspetta Invio per confermare o Escape per
+annullare.
+
+5. LE RIGHE IN TEMPO REALE
+I dati che cambiano mentre si guarda, per esempio il traffico e le
+temperature, vengono scritti come una riga sola, entro quaranta caratteri,
+fra due ritorni carrello: sono una lettura sola del display braille, e il
+cursore resta all'inizio della riga.
+
+Le lettere sono sempre le stesse:
+d, quanto sta scendendo da internet, in byte al secondo;
+u, quanto sta salendo;
+t, la temperatura in gradi, con il numero del sensore quando ce n'è più di uno;
+v, i giri al minuto della ventola;
+q, da quanto tempo la box è accesa;
+p, la percentuale di un lavoro in corso;
+f, i file fatti sul totale;
+m, quanto manca alla fine.
+Le velocità sono scritte in corto: K vuol dire mille byte al secondo, M un
+milione, G un miliardo. La riga si ferma premendo un tasto.
+
+6. I COMANDI
+
+6.1 SISTEMA E DIAGNOSI
+stato: modello, firmware, numero di serie, da quanto è accesa, temperature,
+ventole e stato del disco.
+temperatura: le stesse temperature con un giudizio, e la possibilità di
+seguirle in tempo reale.
+diagnosi: il controllo completo. Ogni riga comincia con ok, avviso o guasto,
+e alla fine dice quante cose meritano uno sguardo. Guarda temperature,
+ventole, connessione, cadute recenti, Wi-Fi, protezione delle reti, segnale
+dei dispositivi, dischi, spazio libero, accesso da fuori casa, FTP anonimo,
+DMZ e DHCP.
+rapporto: la stessa roba scritta per esteso dentro un file di testo, accanto
+al programma, con la data nel nome. È il file da mandare a chi deve capire
+cosa succede alla linea.
+riavvia: riavvia la box, dopo averlo chiesto due volte.
+
+6.2 INTERNET
+internet: stato della connessione, indirizzi pubblici IPv4 e IPv6, portata
+dichiarata, traffico di adesso e byte scambiati da quando la box è accesa.
+traffico: il traffico in tempo reale, riga per riga.
+storico: le misure che il router conserva, cioè traffico, temperature, porte
+ethernet e linea. Si sceglie la misura e il periodo, da un'ora a un mese, e
+si ottengono media, massimo e minimo. Poi si può ascoltare la serie come un
+suono che sale e scende da sinistra a destra: è il modo di leggere un grafico
+senza vederlo.
+eventi: il registro della connessione, cioè cadute, ritorni e cambi di
+portata, con la data di ciascuno.
+fibra: il collegamento in fibra e il suo modulo ottico, con le potenze
+quando la box le riferisce.
+ipv6: se IPv6 è acceso, l'indirizzo locale del router, lo stato del firewall
+e i prefissi delegati alla rete di casa.
+opzioni-internet: filtro della pubblicità sul DNS, risposta al ping da
+internet, accensione della box da remoto, accesso da fuori casa
+all'interfaccia e alle API, e richieste di associazione consentite.
+
+6.3 RETE LOCALE
+dispositivi: tutto ciò che si è collegato alla rete, con nome, indirizzo e
+modo di collegamento. L'asterisco davanti al nome vuol dire che è attivo
+adesso. Scegliendone uno si vede il dettaglio: MAC, costruttore, segnale,
+velocità radio, quando è stato visto la prima volta, e da lì lo si rinomina,
+gli si cambia categoria o lo si sveglia.
+sveglia: manda il pacchetto magico a un computer spento per accenderlo.
+lan: nome e indirizzo del router sulla rete di casa.
+dhcp: il servizio che distribuisce gli indirizzi, con l'intervallo, il
+gateway e i DNS annunciati.
+assegnazioni: chi ha quale indirizzo adesso e per quanto ancora.
+statici: gli indirizzi fissi legati a un dispositivo, da aggiungere e da
+togliere.
+ethernet: le porte del router, quali hanno il cavo attaccato, a che
+velocità, e le statistiche di ciascuna.
+dhcpv6: lo stesso servizio per la versione 6 del protocollo.
+
+6.4 WI-FI
+wifi: acceso o spento, risparmio energetico, filtro dei MAC, e il riassunto
+di punti di accesso e reti.
+reti-wifi: le reti, cioè gli SSID, con protezione e numero di collegati. Da
+qui si cambia nome, password, tipo di protezione, si nasconde il nome o si
+spegne una rete.
+chiavi-wifi: le password delle reti. È un comando a sé stante apposta,
+perché la password non compaia negli elenchi per sbaglio.
+punti-wifi: i punti di accesso, uno per banda, con canale in uso, canale
+scelto e larghezza, e da qui si cambiano.
+collegati-wifi: chi è attaccato al Wi-Fi, con segnale, banda e da quanto
+tempo; scegliendone uno si vedono byte scambiati, protezione in uso e
+velocità radio.
+vicini-wifi: le reti dei vicini che la box sente, con canale e segnale, e
+quali canali sono più affollati.
+canali-wifi: quanto è occupato ogni canale e quale conviene scegliere.
+filtro-mac: la lista bianca o nera degli indirizzi MAC.
+orari-wifi: il calendario che accende e spegne il Wi-Fi da solo, letto come
+fasce orarie giorno per giorno.
+wps: il collegamento senza password, da tenere spento se non si usa.
+
+6.5 SICUREZZA
+porte: le regole che aprono una porta da internet verso un dispositivo di
+casa. Si aggiungono, si accendono, si spengono e si tolgono.
+dmz: il dispositivo esposto a tutto ciò che arriva da internet.
+porte-servizi: le porte occupate dai servizi della box, e su quali si
+possono spostare.
+vpn: i server VPN della box, il loro stato, gli utenti e chi è collegato.
+vpn-cliente: la box che si collega lei a una VPN esterna.
+contenuti: il controllo dei contenuti e i profili di rete, con la pausa di
+un profilo.
+notifiche: i telefoni e i computer che ricevono le notifiche della box.
+
+6.6 DISCO E FILE
+dischi: i dischi collegati, lo spazio libero, la temperatura e gli errori.
+file: il navigatore del disco. Si entra nelle cartelle scegliendole
+dall'elenco, il primo elemento torna al livello superiore, e la voce azioni
+apre cosa si può fare qui: creare una cartella, incollare ciò che si è
+segnato, andare a un percorso scritto a mano, ricordare la cartella come
+punto di partenza. Su un file si può chiedere il dettaglio, rinominarlo,
+segnarlo da copiare o da spostare, cancellarlo, creare un collegamento per
+condividerlo o scaricarlo sul computer.
+compiti: i lavori che il router sta portando avanti sul disco, cioè copie,
+spostamenti e cancellazioni. Si seguono, si fermano e si puliscono.
+condivisioni: i collegamenti pubblici verso i file della box, con la loro
+scadenza.
+risparmio-disco: dopo quanti minuti di riposo il disco si ferma.
+
+6.7 SERVIZI DI CASA
+samba: la condivisione dei file che vede Windows. L'impostazione più
+delicata è se chiedere nome e password: spegnendola, la condivisione diventa
+libera per chiunque sia in casa.
+afp: la stessa cosa per i computer Apple.
+ftp: il server FTP, con le sue porte e l'eventuale accesso da internet.
+multimediale: il server UPnP AV, che mostra i file della box a televisori e
+lettori.
+airmedia: manda musica, foto o video a un apparecchio che sa riceverli.
+display: il display sul fronte della box, con luminosità, orientamento e
+cosa mostra.
+scaricamenti: il gestore che scarica anche a computer spento. Si aggiunge un
+indirizzo, si mette in pausa, si riprende, si toglie, e si segue
+l'avanzamento.
+
+6.8 TELEFONO
+chiamate: il registro, filtrabile per perse, ricevute, fatte o mai viste.
+Una chiamata si guarda in dettaglio, si segna come letta, si cancella, e
+tutto il registro si può svuotare.
+telefono: le linee e le cornette DECT. Da qui si fanno squillare tutte
+insieme per ritrovarne una, si apre la registrazione di una cornetta nuova,
+si cambia la suoneria, si accende il modo eco, si cambia il PIN e si regolano
+i volumi.
+rubrica: i contatti della box, da elencare, cercare, aggiungere e togliere.
+
+6.9 PROGRAMMA
+aree, elenco, cerca, permessi, aiuto ed esci.
+permessi dice a quali parti della box la sessione ha accesso: i permessi si
+concedono e si tolgono dall'interfaccia web della box, alla voce Gestione
+degli accessi.
+
+7. DALLA RIGA DI COMANDO
+Il programma si può lanciare con il nome di un comando, e allora lo esegue e
+torna alla shell:
+python iliadbox.py stato
+python iliadbox.py diagnosi
+python iliadbox.py --host 192.168.1.254 dispositivi
+Altre opzioni: --elenco stampa i comandi, --aiuto ricorda l'uso, --host dice
+dove sta la box quando non è all'indirizzo solito.
+
+8. QUANDO QUALCOSA NON VA
+"Nessuna risposta": il computer non è sulla rete della box, o la box ha un
+altro indirizzo. Si prova con --host.
+"Devi effettuare il login": la sessione è scaduta e il programma la rifà da
+solo; se il messaggio resta, il token non vale più e va cancellato
+config.json per rifare l'associazione.
+"Permesso mancante": quella parte della box è chiusa a questa applicazione.
+Si apre dall'interfaccia web, alla voce Gestione degli accessi.
+"Questo servizio non è attualmente disponibile": la box non offre quella
+funzione, per esempio le registrazioni TV senza abbonamento o la linea ADSL
+su un collegamento in fibra.
+
+9. LICENZA
+Unlicense: il codice è nel pubblico dominio, si veda il file LICENSE. Le API
+sono quelle di FreeboxOS, documentate su dev.freebox.fr, di cui la Iliadbox
+espone la versione 15.

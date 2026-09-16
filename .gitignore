@@ -1,0 +1,17 @@
+# Iliadbox, cosa resta fuori da git.
+# Il file di configurazione contiene il token che apre il router: vale quanto
+# una password e non deve finire in un repository pubblico. Chi scarica il
+# programma ne crea uno suo alla prima associazione con la propria box.
+config.json
+# I rapporti salvati dal comando rapporto: dentro ci sono indirizzi, nomi dei
+# dispositivi di casa e numero di serie della box.
+iliadbox-*.txt
+# I prodotti della compilazione e l'archivio della release.
+__pycache__/
+build/
+dist/
+*.zip
+*.exe
+.pytest_cache/
+.ruff_cache/
+*.tmp

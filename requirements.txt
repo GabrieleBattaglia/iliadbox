@@ -1,0 +1,10 @@
+# Iliadbox, cosa serve per farlo funzionare.
+# requests parla con le API del router; urllib3 arriva con lui e qui serve solo
+# a zittire l'avviso sul certificato della box, che e' firmato da se' stessa.
+requests>=2.31
+# GBUtils e' la libreria condivisa del parco software di Gabriele Battaglia:
+# non sta su PyPI, si clona da GitHub e la sua cartella va nella PYTHONPATH.
+# https://github.com/GabrieleBattaglia/GBUtils
+# Per il comando storico, quando si sceglie di ascoltare una serie di numeri
+# invece di leggerla, servono anche numpy e sounddevice, che GBUtils importa
+# dentro sonify: senza di loro tutto il resto funziona lo stesso.

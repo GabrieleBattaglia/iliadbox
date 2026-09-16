@@ -1,0 +1,32 @@
+# Configurazione ruff di Iliadbox.
+# Autori: Gabriele Battaglia (IZ4APU) & ClaudIA (Claude Opus 5, modalità auto).
+line-length = 200
+
+[lint]
+select = ["E", "F", "W", "B", "SIM", "UP", "I", "C4", "RET", "BLE", "S", "RUF", "DTZ", "FURB"]
+ignore = [
+    # Righe lunghe: quasi tutti i messaggi all'utente stanno su una riga sola,
+    # e spezzarli renderebbe piu' difficile ritrovarli nel codice.
+    "E501",
+    # Lo stile di Gabriele ammette l'istruzione breve sulla stessa riga.
+    "E701",
+    "E702",
+    "E741",
+    # Date e orari sono di proposito quelli locali, senza fuso: la box e chi la
+    # usa stanno nello stesso posto, e un rapporto va letto con l'ora di casa.
+    "DTZ001",
+    "DTZ005",
+    "DTZ006",
+    "DTZ011",
+    # Il certificato della box e' firmato da se' stessa e non c'e' modo di
+    # verificarlo: e' un apparecchio sulla rete locale, non un sito.
+    "S501",
+    # requests con il timeout c'e' sempre, ma ruff non lo vede dentro i metodi
+    # che lo passano da una variabile.
+    "S113",
+]
+
+[lint.per-file-ignores]
+# Nelle prove l'assert e' lo strumento di pytest, non un controllo da lasciare
+# in produzione.
+"tests/*.py" = ["S101"]
