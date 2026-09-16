@@ -110,7 +110,9 @@ all'interfaccia e alle API, e richieste di associazione consentite.
 
 6.3 RETE LOCALE
 dispositivi: tutto ciò che si è collegato alla rete, con nome, indirizzo e
-modo di collegamento. L'asterisco davanti al nome vuol dire che è attivo
+modo di collegamento. La box tiene due elenchi separati, la rete di casa e
+quella degli ospiti, e il comando chiede quale guardare solo quando tutte e
+due hanno qualcuno dentro. L'asterisco davanti al nome vuol dire che è attivo
 adesso. Scegliendone uno si vede il dettaglio: MAC, costruttore, segnale,
 velocità radio, quando è stato visto la prima volta, e da lì lo si rinomina,
 gli si cambia categoria o lo si sveglia.
@@ -122,7 +124,10 @@ assegnazioni: chi ha quale indirizzo adesso e per quanto ancora.
 statici: gli indirizzi fissi legati a un dispositivo, da aggiungere e da
 togliere.
 ethernet: le porte del router, quali hanno il cavo attaccato, a che
-velocità, e le statistiche di ciascuna.
+velocità, e le statistiche di ciascuna. Da qui si può anche forzare una porta
+a una velocità e a un duplex, o rimetterla in automatico: serve quando un
+apparecchio vecchio non si mette d'accordo da solo con il router e il
+collegamento va a scatti.
 dhcpv6: lo stesso servizio per la versione 6 del protocollo.
 
 6.4 WI-FI
@@ -139,7 +144,8 @@ collegati-wifi: chi è attaccato al Wi-Fi, con segnale, banda e da quanto
 tempo; scegliendone uno si vedono byte scambiati, protezione in uso e
 velocità radio.
 vicini-wifi: le reti dei vicini che la box sente, con canale e segnale, e
-quali canali sono più affollati.
+quali canali sono più affollati. Si può chiedere una scansione nuova invece di
+leggere quella di prima, ma durante la scansione il Wi-Fi fa qualche scatto.
 canali-wifi: quanto è occupato ogni canale e quale conviene scegliere.
 filtro-mac: la lista bianca o nera degli indirizzi MAC.
 orari-wifi: il calendario che accende e spegne il Wi-Fi da solo, letto come
@@ -166,7 +172,9 @@ apre cosa si può fare qui: creare una cartella, incollare ciò che si è
 segnato, andare a un percorso scritto a mano, ricordare la cartella come
 punto di partenza. Su un file si può chiedere il dettaglio, rinominarlo,
 segnarlo da copiare o da spostare, cancellarlo, creare un collegamento per
-condividerlo o scaricarlo sul computer.
+condividerlo, scaricarlo sul computer, metterlo dentro un archivio zip,
+estrarlo se è un archivio, o calcolarne l'impronta md5 o sha1, che è il modo
+di sapere se la copia sulla box è identica all'originale.
 compiti: i lavori che il router sta portando avanti sul disco, cioè copie,
 spostamenti e cancellazioni. Si seguono, si fermano e si puliscono.
 condivisioni: i collegamenti pubblici verso i file della box, con la loro
@@ -186,7 +194,8 @@ display: il display sul fronte della box, con luminosità, orientamento e
 cosa mostra.
 scaricamenti: il gestore che scarica anche a computer spento. Si aggiunge un
 indirizzo, si mette in pausa, si riprende, si toglie, e si segue
-l'avanzamento.
+l'avanzamento. Da qui si legge anche il diario di un singolo scaricamento e si
+governano i feed RSS che la box sorveglia per scaricare da sola le novità.
 
 6.8 TELEFONO
 chiamate: il registro, filtrabile per perse, ricevute, fatte o mai viste.
