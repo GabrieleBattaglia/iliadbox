@@ -2,6 +2,8 @@
 
 ## 1.0.0, 16 settembre 2026
 
+Pubblicata su GitHub il 17 settembre 2026 come release `v1.0.0`, con il solo archivio `iliadbox.zip` in allegato.
+
 Prima release pubblica. Il prototipo "Iliad BryBox", che viveva dentro la cartella Stuff e faceva il monitoraggio e poco altro, diventa un progetto a sé stante con il suo repository e la Unlicense.
 
 - Cinquantotto comandi, divisi in otto aree piu' quelli del programma: sistema e diagnosi, internet, rete locale, Wi-Fi, sicurezza, disco e file, servizi di casa, telefono. Il prototipo ne aveva diciotto, e dodici si limitavano a elencare.
