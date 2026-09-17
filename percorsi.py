@@ -5,7 +5,8 @@
 
 """I percorsi di Iliadbox.
 
-Due regole, prese dal memorandum sui percorsi in docs. Cio' che il programma
+Due regole, che stanno scritte per esteso nelle docstring di
+cartella_applicazione e percorso_risorsa di GBUtils. Cio' che il programma
 scrive, cioe' la configurazione con il token e i rapporti salvati, sta
 accanto al programma: accanto all'eseguibile quando e' compilato, accanto ai
 sorgenti altrimenti. Cio' che il programma legge soltanto, cioe' il manuale e
