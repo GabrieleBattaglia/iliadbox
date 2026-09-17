@@ -102,6 +102,14 @@ python -m pytest -q
 
 Le prove non toccano la box: verificano i formati, il registro dei comandi e il cliente delle API contro risposte finte.
 
+C'e' poi il banco, che invece la box la interroga davvero:
+
+```
+python banco_comandi.py
+```
+
+Esegue tutti i comandi uno dopo l'altro e dice quali sono arrivati in fondo, con le funzioni che dialogano sostituite da risposte gia' pronte: i menu rispondono Escape, le domande rispondono no, le conferme annullano. Cosi' ogni comando percorre tutta la parte che legge e si ferma sulla soglia di cio' che scriverebbe. Con dei nomi come argomenti ne prova solo alcuni, e il riavvio resta fuori comunque.
+
 ## Stato
 
 Versione 1.0.0 del 16 settembre 2026, la prima pubblica. Il programma è nato nel dicembre 2025 come prototipo privato, con il nome "Iliad BryBox", e faceva il monitoraggio e poco altro. La cronologia è in [CHANGELOG.md](CHANGELOG.md).

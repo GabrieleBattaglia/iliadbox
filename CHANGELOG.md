@@ -30,6 +30,7 @@ Prima release pubblica. Il prototipo "Iliad BryBox", che viveva dentro la cartel
 - Manuale in italiano, aperto dal comando `aiuto`, con la legenda delle righe compatte e una sezione per ogni area.
 - Prove con pytest che non toccano la box: formati, registro dei comandi e cliente delle API contro risposte finte.
 - Si compila con PyInstaller in un file unico, `iliadbox.spec`, che porta dentro il manuale e il changelog; `zip_maker.py` ne fa l'archivio per la distribuzione. numpy e sounddevice restano fuori di proposito: dentro portano l'eseguibile da 46 a 125 MB e l'avvio da 1,4 a 5,5 secondi, e a rimetterci sarebbe ogni comando per il bene di una funzione sola.
+- `banco_comandi.py` esegue tutti i comandi contro la box vera, con le funzioni che dialogano sostituite da risposte gia' pronte, e riferisce quali sono arrivati in fondo: e' l'altra meta' del collaudo, quella che pytest non puo' fare perche' non ha un router davanti.
 - I percorsi seguono lo schema del parco software: un modulo `percorsi.py` nella radice che chiama `cartella_applicazione` e `percorso_risorsa` di GBUtils.
 
 ## 0.5.2, gennaio 2026, e le versioni prima
